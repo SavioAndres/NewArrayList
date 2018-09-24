@@ -8,7 +8,7 @@ import java.util.Iterator;
  * @author Sávio Andres
  * @param <T>
  */
-public class NewArrayList<T> implements Lista<T> {
+public class NewArrayList<T> implements Lista<T>, Pilha<T>, Fila<T> {
 
     private T[] elementos;
     private int tamanho, capacidade;
@@ -23,9 +23,7 @@ public class NewArrayList<T> implements Lista<T> {
         if (this.tamanho == this.capacidade) {
             int novaCapacidade = capacidade + (capacidade / 2);
             T[] novoVetor = (T[]) new Object[novaCapacidade];
-            for (int i = 0; i < this.tamanho; i++) {
-                novoVetor[i] = this.elementos[i];
-            }
+            System.arraycopy(this.elementos, 0, novoVetor, 0, this.tamanho);
             this.elementos = novoVetor;
             this.capacidade = novoVetor.length;
         }
@@ -64,12 +62,14 @@ public class NewArrayList<T> implements Lista<T> {
     }
 
     @Override
-    public void remover(int indice) {
+    public T remover(int indice) {
         vIndice(indice);
+        T obj = obter(indice);
         for (int i = indice; i < this.tamanho; i++) {
             this.elementos[i] = this.elementos[i + 1];
         }
         this.tamanho = this.tamanho - 1;
+        return obj;
     }
 
     @Override
@@ -117,26 +117,68 @@ public class NewArrayList<T> implements Lista<T> {
         return true;
     }
 
+    //Pilha
+    @Override
+    public void empilhar(T elemento) {
+        adicionar(elemento);
+    }
+
+    @Override
+    public T desempilhar() {
+        return remover(this.tamanho - 1);
+    }
+
+    @Override
+    public T topo() {
+        return obter(this.tamanho - 1);
+    }
+
+    //Fila
+    @Override
+    public void enfileirar(T elemento) {
+        adicionar(elemento);
+    }
+
+    @Override
+    public T desenfileirar() {
+        return remover(0);
+    }
+
+    @Override
+    public T primeiro() {
+        return obter(0);
+    }
+
+    @Override
+    public T ultimo() {
+        return obter(this.tamanho - 1);
+    }
+
     @Override
     public String toString() {
-        return "NewArrayList{" + "elementos=" + elementos + ", tamanho=" + tamanho + ", capacidade=" + capacidade + '}';
+        if (this.tamanho != 0) {
+            StringBuilder str = new StringBuilder();
+            for (int i = 0; i < this.tamanho - 1; i++) {
+                str.append(obter(i)).append(", ");
+            }
+            return "[" + str.toString() + obter(tamanho - 1) + "]";
+        } else {
+            return "[]";
+        }
     }
 
     @Override
     public Iterator<T> iterator() {
         return new IteradorVetor();
     }
-
+    
     private class IteradorVetor implements Iterator<T> {
 
         private int posicaoAtual = 0;
         
         @Override
         public boolean hasNext() {
-            if(posicaoAtual < tamanho){
-                return true;
-            }
-            return false;
+            return posicaoAtual < tamanho;
         }
 
         @Override
