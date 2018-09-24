@@ -56,9 +56,39 @@ public class NewArrayList<T> implements Lista<T>, Pilha<T>, Fila<T> {
     }
 
     @Override
+    public void adicionarTodos(T... elementos) {
+        for (T elemento : elementos) {
+            this.adicionar(elemento);
+        }
+    }
+    
+    @Override
     public T obter(int indice) {
         vIndice(indice);
         return this.elementos[indice];
+    }
+    
+    @Override
+    public int obterIndice(T elemento) {
+        for (int i = 0; i < this.tamanho; i++) {
+            if (obter(i).equals(elemento)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public int[] obterIndices(T elemento) {
+        int cont = -1;
+        int indices[] = new int[contemQuantos(elemento)];
+        for (int i = 0; i < this.tamanho; i++) {
+            if (obter(i).equals(elemento)) {
+                cont = cont + 1;
+                indices[cont] = i;
+            }
+        }
+        return indices;
     }
 
     @Override
@@ -91,6 +121,17 @@ public class NewArrayList<T> implements Lista<T>, Pilha<T>, Fila<T> {
             }
         }
         return false;
+    }
+    
+    @Override
+    public int contemQuantos(T elemento) {
+        int cont = 0;
+        for (int i = 0; i < this.tamanho; i++) {
+            if (obter(i).equals(elemento)) {
+                cont = cont + 1;
+            }
+        }
+        return cont;
     }
 
     @Override
@@ -153,7 +194,7 @@ public class NewArrayList<T> implements Lista<T>, Pilha<T>, Fila<T> {
     public T ultimo() {
         return obter(this.tamanho - 1);
     }
-
+    
     @Override
     public String toString() {
         if (this.tamanho != 0) {
