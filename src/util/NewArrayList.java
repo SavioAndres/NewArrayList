@@ -98,7 +98,7 @@ public class NewArrayList<T> implements Lista<T>, Pilha<T>, Fila<T> {
         for (int i = indice; i < this.tamanho; i++) {
             this.elementos[i] = this.elementos[i + 1];
         }
-        this.tamanho = this.tamanho - 1;
+        this.tamanho--;
         return obj;
     }
 
@@ -115,12 +115,7 @@ public class NewArrayList<T> implements Lista<T>, Pilha<T>, Fila<T> {
 
     @Override
     public boolean contem(T elemento) {
-        for (int i = 0; i < this.tamanho; i++) {
-            if (this.elementos[i] == elemento) {
-                return true;
-            }
-        }
-        return false;
+        return contemQuantos(elemento) != 0;
     }
     
     @Override
